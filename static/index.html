@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Cep</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgb(215, 225, 226);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input {
+            padding: 8px;
+            width: 200px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #3c1a68;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta de CEP</h1>
+    
+    <div class="form-group">
+        <input type="text" id="cep" placeholder="Digite o CEP">
+        <button onclick="consultarCep()">Consultar</button>
+    </div>
+
+    <div id="resultado"></div>
+
+    <script>
+        async function consultarCep() {
+            const cep = document.getElementById('cep').value;
+            const resultado = document.getElementById('resultado');
+            
+            try {
+                const response = await fetch(`http://localhost:8000/api/endereco/cep/${cep}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Erro ao consultar CEP');
+                }
+                
+                resultado.innerHTML = `
+                    <h3>Resultado da consulta:</h3>
+                    <p>CEP: ${data.cep}</p>
+                    <p>Logradouro: ${data.logradouro}</p>
+                    <p>Bairro: ${data.bairro}</p>
+                    <p>Cidade: ${data.localidade}</p>
+                    <p>UF: ${data.uf}</p>
+                `;
+                resultado.style.display = 'block';
+            } catch (error) {
+                resultado.innerHTML = `<p style="color: red">Erro: ${error.message}</p>`;
+                resultado.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html> 
