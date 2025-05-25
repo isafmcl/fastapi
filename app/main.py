@@ -9,7 +9,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configuração do CORS
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -31,7 +31,7 @@ async def consultar_cep(cep: str):
     """
     Consulta um CEP no serviço ViaCEP
     """
-    # Remove caracteres não numéricos do CEP
+    # vai só remover caracteres não numéricos do CEP
     cep = ''.join(filter(str.isdigit, cep))
     
     if len(cep) != 8:
